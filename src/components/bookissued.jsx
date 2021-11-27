@@ -7,25 +7,25 @@ class Bookissued extends React.Component {
   };
   componentDidMount() {
     axios
-      .get("http://localhost:8080/api/viewBookIssuedList")
+      .get("http://localhost:8080/api/viewbookissuedlist")
       .then((res) => {
         console.log(res);
-        this.setState({ bookissued: res.data });
+        this.setState({ booksissued: res.data });
       })
       .catch((err) => console.log(err));
   }
-  handleDelete = (issueId) => {
+  handleDelete = (Id) => {
     axios
-      .delete(`http://localhost:8080/api/viewBookIssuedList/${issueId}`)
+      .delete(`http://localhost:8080/api/deleteissuedbook/${Id}`)
       .then((res) => {
-        const del = this.state.booksissued.filter((d) => d.issueId != issueId);
-        this.setState({ authors: del });
+        const booksissue = this.state.booksissued.filter((d) => d.issueId != Id);
+        this.setState({ booksissued: booksissue });
       });
   };
   render() {
     return (
       <div className="container">
-        <Link to="/bookissued/add" className="btn btn-primary float-end my-3">
+        <Link to="/booksissued/add" className="btn btn-primary float-end my-3">
           Add
         </Link>
         <table className="table table-dark table-striped ">
@@ -34,7 +34,8 @@ class Bookissued extends React.Component {
               <th>issueId</th>
               <th>issueDate</th>
               <th>dueDate</th>
-              <th colSpan="2">Actions</th>
+             
+              <th colSpan="3">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -43,21 +44,24 @@ class Bookissued extends React.Component {
                 <td>{bookissued.issueId}</td>
                 <td>{bookissued.issueDate}</td>
                 <td>{bookissued.dueDate}</td>
+                {/* <td>{bookissued.bookid}</td>
+                <td>{bookissued.userid}</td> */}
                 <td>
-                  <Link to={`/bookissued/update/${bookissued.issueId}`}>
+                  <Link to={`/booksissued/update/${bookissued.issueId}`}>
                     <input
                       type="button"
                       value="Update"
                       className="btn btn-primary me-2"
                     />
                   </Link>
-
+                 
                   <input
                     type="button"
                     value="Delete"
                     className="btn btn-danger"
                     onClick={() => this.handleDelete(bookissued.issueId)}
                   />
+                 
                 </td>
               </tr>
             ))}
