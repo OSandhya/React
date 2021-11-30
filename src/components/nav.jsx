@@ -1,105 +1,87 @@
-import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  IconButton,
+  Badge,
+} from "@mui/material";
 
-class Nav extends Component {
-    render() {
-      return (
-        <div>
-          <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <div className="container-fluid">
-              <NavLink className="navbar-brand" to="/">
-                MyApp
-              </NavLink>
-              <button
-                className="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-              >
-                <span className="navbar-toggler-icon"></span>
-              </button>
-              <div
-                className="collapse navbar-collapse"
-                id="navbarSupportedContent"
-              >
-                <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                  <li className="nav-item">
-                    <NavLink
-                      className="nav-link active"
-                      aria-current="page"
-                      to="/home"
-                    >
-                      Home
-                    </NavLink>
-                  </li>
-                  <li className="nav-item">
-                  <NavLink
-                    className="nav-link active"
-                    aria-current="page"
-                    to="/admin"
-                  >
-                    Admin
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink
-                    className="nav-link active"
-                    aria-current="page"
-                    to="/author"
-                  >
-                   Author
-                  </NavLink>
-                </li>
-                  <li className="nav-item">
-                    <NavLink className="nav-link" to="/posts">
-                      Posts
-                    </NavLink>
-                  </li>
-                </ul>
-                <form className="d-flex">
-                  <input
-                    className="form-control me-2"
-                    type="search"
-                    placeholder="Search"
-                    aria-label="Search"
-                  />
-                  <button className="btn btn-outline-success" type="submit">
-                    Search
-                  </button>
-                </form>
-                <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-                  <li className="nav-item">
-                    <NavLink className="nav-link" to="/login">
-                      Login
-                    </NavLink>
-                  </li>
-                  <li className="nav-item">
-                    <NavLink className="nav-link" to="/register">
-                      Register
-                    </NavLink>
-                  </li>
-                  <li className="nav-item">
-                    <NavLink className="nav-link" to="/cart">
-                      Cart
-                    </NavLink>
-                  </li>
-                  <li className="nav-item">
-                    <NavLink className="nav-link" to="/bookissued">
-                      Bookissued
-                    </NavLink>
-                  </li>
-                  
-                </ul>
-              </div>
-            </div>
-          </nav>
-        </div>
-      );
-    }
-  }
-  
-  export default Nav;
+import { useSelector } from "react-redux";
+import Users from "./users";
+import { logoutAction } from "../actions/login-action";
+const Nav = () => {
+  //const classes = useStyles();
+  const login = useSelector((state) => state.login);
+  console.log(login);
+  return (
+    <div>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography
+            variant="h6"
+            style={{
+              padding: "5px",
+            }}
+          >
+            LMS
+          </Typography>
+          <Button color="inherit" component={NavLink} to="/home">
+            Home
+          </Button>
+          {login.loggedIn && login.role == "admin" && (
+            <Button color="inherit" component={NavLink} to="/author">
+              Authors
+            </Button>
+          )}
+           {login.loggedIn && login.role == "admin" && (
+            <Button color="inherit" component={NavLink} to="/publisher">
+              Publisher
+            </Button>
+          )}
 
+           {login.loggedIn && login.role == "admin" &&  (    
+          <Button color="inherit" component={NavLink} to="/book">
+            Books
+          </Button>
+           )}
+            {login.loggedIn && login.role == "user" &&  (    
+          <Button color="inherit" component={NavLink} to="/book">
+            Books
+          </Button>
+           )}
+
+
+          {/*   <Button color="inherit" component={NavLink} to="/users">
+            Users
+          </Button> */}
+          {login.loggedIn && login.role == "admin" && (
+            <Button
+              color="inherit"
+              style={{ marginRight: "auto" }}
+              component={NavLink}
+              to="/users"
+            >
+              Users
+            </Button>
+          )}
+          {login.loggedIn ? (
+            <Button color="inherit" style={{ marginLeft: "auto" }} component={NavLink} to="/logout">
+              Logout
+            </Button>
+          ) : (
+            <Button color="inherit" style={{ marginLeft: "auto" }} component={NavLink} to="/login">
+              Login
+            </Button>
+          )}
+          {/* <Button color="inherit" component={NavLink} to="/register">
+            Register
+          </Button> */}
+        </Toolbar>
+      </AppBar>
+    </div>
+  );
+};
+
+export default Nav;

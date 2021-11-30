@@ -23,11 +23,13 @@ import {
   InputLabel,
   FormControl,
   MenuItem,
+  Paper,
 } from "@mui/material";
-import axios from "axios";
 import Joi from "joi-browser";
 import Alert from "@mui/material/Alert";
-
+import { useSelector, useDispatch } from "react-redux";
+import { loginAction } from "../actions/login-action";
+import { connect } from "react-redux";
 const ariaLabel = { "aria-label": "description" };
 
 const Login = (props) => {
@@ -36,9 +38,12 @@ const Login = (props) => {
     password: "",
     role: "",
   });
+
+const dispatch = useDispatch();
+  const login = useSelector((state) => state.login);
   const [errors, setErrors] = useState({
     email: "",
-    password: "",
+  password: "",
     role: "",
   });
   const [errMsg, setErrMsg] = useState("");
@@ -77,100 +82,119 @@ const Login = (props) => {
   };
 
   const handleSubmit = (event) => {
+    // Prevent default behaviour of submit button
     event.preventDefault();
     console.log("Handle submit");
 
-    //const errors = validate();
-    //console.log(errors);
+    // Validate user input againest schema
     setErrors(validate());
     console.log(errors);
+
+    // if errors, don't redirect to products page
     if (errors) return;
-    axios
-      .post("http://localhost:8082/login", user)
-      .then((res) => props.history.push("/home"))
-      .catch((err) => {
-        console.log(err.response.data.message);
-        setErrMsg(err.response.data.message);
-      });
+
+    // Dispatch login action
+    dispatch(loginAction(user));
+
+    // Redirect to products page on successfull login
+    if (login.loggedIn) {
+      props.history.push("/book");
+    }
   };
   return (
     <div>
       <Typography variant="h3">Login Page</Typography>
       <Grid container>
         <Grid item xs={4} style={{ marginLeft: "auto", marginRight: "auto" }}>
-          {errMsg && <Alert severity="error">{errMsg}</Alert>}
-          <form
-            onSubmit={handleSubmit}
-            noValidate
-            style={{
-              border: "1px solid blue",
-              padding: "20px",
-              marginTop: "10px",
-            }}
-          >
-            <Box mb={3}>
-              <TextField
-                inputProps={ariaLabel}
-                type="email"
-                variant="outlined"
-                fullWidth
-                label="Email"
-                value={user.email}
-                name="email"
-                onChange={handleChange}
-              />
-              {errors && (
-                <Typography variant="caption">{errors.email}</Typography>
-              )}
-            </Box>
+          {login.errMsg && <Alert severity="error">{login.errMsg}</Alert>}
+          <Paper elevation={3}>
+            <form
+              onSubmit={handleSubmit}
+              noValidate
+              style={{
+                padding: "20px",
+                marginTop: "10px",
+              }}
+            >
+              <Box mb={3}>
+                <TextField
+                  inputProps={ariaLabel}
+                  type="email"
+                  variant="outlined"
+                  fullWidth
+                  label="Email"
+                  value={user.email}
+                  name="email"
+                  onChange={handleChange}
+                />
+                {errors && (
+                  <Typography variant="caption">{errors.email}</Typography>
+                )}
+              </Box>
 
-            <Box mb={3}>
-              <TextField
-                inputProps={ariaLabel}
-                type="password"
-                fullWidth
-                variant="outlined"
-                label="Password"
-                value={user.password}
-                name="password"
-                onChange={handleChange}
-              />
-              {errors && (
-                <Typography variant="caption">{errors.password}</Typography>
-              )}
-            </Box>
+              <Box mb={3}>
+                <TextField
+                  inputProps={ariaLabel}
+                  type="password"
+                  fullWidth
+                  variant="outlined"
+                  label="Password"
+                  value={user.password}
+                  name="password"
+                  onChange={handleChange}
+                />
+                {errors && (
+                  <Typography variant="caption">{errors.password}</Typography>
+                )}
+              </Box>
 
-            <FormControl variant="outlined" fullWidth>
-              <InputLabel id="demo-simple-select-outlined-label">
-                Role
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                onChange={handleChange}
-                name="role"
-                value={user.role}
-                label="Role"
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value="admin">Admin</MenuItem>
-                <MenuItem value="customer">Customer</MenuItem>
-                <MenuItem value="student">Student</MenuItem>
-              </Select>
-            </FormControl>
-            {errors && <Typography variant="caption">{errors.role}</Typography>}
-            <Box mt={3}>
-              <Button variant="contained" type="submit" fullWidth>
-                Login
-              </Button>
-            </Box>
-          </form>
+              <FormControl variant="outlined" fullWidth>
+                <InputLabel id="demo-simple-select-outlined-label">
+                  Role
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-outlined-label"
+                  id="demo-simple-select-outlined"
+                  onChange={handleChange}
+                  name="role"
+                  value={user.role}
+                  label="Role"
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value="admin">Admin</MenuItem>
+                  <MenuItem value="user">User</MenuItem>
+                </Select>
+              </FormControl>
+              {errors && (
+                <Typography variant="caption">{errors.role}</Typography>
+              )}
+              <Box mt={3}>
+                <Button variant="contained" type="submit" fullWidth>
+                  Login
+                </Button>
+              </Box>
+            </form>
+          </Paper>
         </Grid>
       </Grid>
     </div>
   );
 };
 
-export default Login;
+const mapStateToProps = (state) => {
+  //  const { fakestore } = state;
+  return {
+    login: state.login.login,
+  };
+};
+
+// function to dispatch actions
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loginAction,
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps())(Login);
