@@ -50,7 +50,7 @@ class UpdateIssuedBook extends React.Component {
       issueId:this.props.match.params.issueId,    
     };
     axios
-      .put("http://localhost:8080/api/updateissuedbook",this.props.match.params.issueId)
+      .put("http://localhost:8080/api/updateissuedbook",issue)
       .then((res) => {
         this.props.history.push("/bookissued");
       })

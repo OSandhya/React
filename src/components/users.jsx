@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-
+import { connect } from "react-redux";
 class Users extends React.Component {
   state = {
     users: [],
@@ -26,9 +26,9 @@ class Users extends React.Component {
       <div className="container">
         <Link
           to="/users/addusers"
-          className="btn btn-primary btn-large mb-1 float-end"
+          // className="btn btn-primary btn-large mb-1 float-end"
         >
-          Add
+         
         </Link>
         <table className="table">
           <thead>
@@ -38,7 +38,7 @@ class Users extends React.Component {
               <th>Last Name</th>
               <th>Contact Number</th>
               <th>Date Of Birth</th>
-              <th colSpan="2">Actions</th>
+              {/* <th colSpan="2">Actions</th> */}
             </tr>
           </thead>
           <tbody>
@@ -49,7 +49,7 @@ class Users extends React.Component {
                 <td>{user.lastName}</td>
                 <td>{user.mobileno}</td>
                 <td>{user.dateofbirth}</td>
-                <td>
+               {/*  <td>
                   <Link to={`/users/update/${user.userid}`}>
                     <input
                       type="button"
@@ -63,7 +63,7 @@ class Users extends React.Component {
                     className="btn btn-danger"
                     onClick={() => this.handleDelete(user.userid)}
                   />
-                </td>
+                </td> */}
               </tr>
             ))}
           </tbody>
@@ -72,5 +72,10 @@ class Users extends React.Component {
     );
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    login: state.login,
+  };
+};
 
-export default Users;
+export default connect(mapStateToProps)(Users); 

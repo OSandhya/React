@@ -5,10 +5,14 @@ class Home extends Component {
   render() {
     return (
       <div>
-       <h1>WELCOME TO LIBRARY</h1>
+       <h3>WELCOME TO LIBRARY
+   
+       
+       </h3>
       </div>
     );
   }
 }
 
 export default Home;
+/* C:\Users\sanoruga\OneDrive - Capgemini\Pictures */

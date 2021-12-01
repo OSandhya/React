@@ -1,54 +1,56 @@
 import React, { Component } from "react";
 import axios from "axios";
 
-class UpdateAuthor extends React.Component {
+class UpdateOrder extends React.Component {
   state = {
-    author: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      contactno: "",
+    bookorder: {
+
+        orderStatus:"",
+        quantity:"",
+        orderDate:"",
+        bookid:"",
     },
   };
-
   componentDidMount() {
     // this.props.match.params.authorId;
     axios
       .get(
-        `http://localhost:8080/api/viewAuthorbyId/${this.props.match.params.authorId}`
+        `http://localhost:8080/api/viewOrderById/${this.props.match.params.orderId}`
       )
       .then((res) => {
-        const auth = { ...this.state.author };
-        auth.firstName = res.data.firstName;
-        auth.lastName = res.data.lastName;
-        auth.email = res.data.email;
-        auth.contactno = res.data.contactno;
+        const bookorder = { ...this.state.bookorder };
+       bookorder.orderStatus = res.data.orderStatus;
+       bookorder.quantity = res.data.quantity;
+       bookorder.orderDate = res.data.orderDate;
+       bookorder.bookid = res.data.bookid;
         console.log(res.data);
-        console.log(auth);
-        this.setState({ author: auth });
+        console.log(bookorder);
+        this.setState({ bookorder:bookorder });
       })
       .catch((err) => console.log(err));
   }
   handleChange = (event) => {
-    const auth = { ...this.state.author };
-    auth[event.target.name] = event.target.value;
+    const bookorder = { ...this.state.bookorder };
+   bookorder[event.target.name] = event.target.value;
     console.log(event.target.name);
     console.log(event.target.value);
-    this.setState({ author: auth });
+    this.setState({ bookorder:bookorder });
   };
   handleSubmit = (event) => {
     event.preventDefault();
-    const auth = {
-      firstName: this.state.author.firstName,
-      lastName: this.state.author.lastName,
-      email: this.state.author.email,
-      contactno: this.state.author.contactno,
-      authorId: this.props.match.params.authorId,
+    const bookorder = {
+      orderStatus: this.state.bookorder.orderStatus,
+      quantity: this.state.bookorder.quantity,
+      orderDate:this.state.bookorder.orderDate,
+     books:{
+        bookid: this.state.bookorder.bookid,
+      },
+      orderId: this.props.match.params.orderId,
     };
     axios
-      .put("http://localhost:8080/api/updateAuthor", auth)
+      .put("http://localhost:8080/lms/updateOrder", bookorder)
       .then((res) => {
-        this.props.history.push("/author");
+        this.props.history.push("/booksorder");
       })
       .catch((err) => console.log(err));
   };
@@ -58,55 +60,55 @@ class UpdateAuthor extends React.Component {
         <form onSubmit={this.handleSubmit} className="w-50 mx-auto border p-3">
           <div className="mb-3">
             <label for="exampleInputName" className="form-label">
-              FirstName
+              OrderStatus
             </label>
             <input
               type="text"
               className="form-control"
               id="exampleInputName"
               aria-describedby="emailHelp"
-              value={this.state.author.firstName}
-              name="firstName"
+              value={this.state.bookorder.orderStatus}
+              name="orderStatus"
               onChange={this.handleChange}
             />
           </div>
-          <div className="mb-3">
-            <label for="exampleInputName" className="form-label">
-              LastName
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="exampleInputName"
-              value={this.state.author.lastName}
-              name="lastName"
-              onChange={this.handleChange}
-            />
-          </div>
-          <div className="mb-3">
-            <label for="exampleInputEmail1" className="form-label">
-              Email address
-            </label>
-            <input
-              type="email"
-              className="form-control"
-              id="exampleInputEmail1"
-              aria-describedby="emailHelp"
-              value={this.state.author.email}
-              name="email"
-              onChange={this.handleChange}
-            />
-          </div>
+
           <div className="mb-3">
             <label for="exampleInputPh" className="form-label">
-              ContactNo
+              Quantity
             </label>
             <input
               type="tel"
               className="form-control"
               id="exampleInputPh"
-              value={this.state.author.contactno}
-              name="contactno"
+              value={this.state.bookorder.quantity}
+              name="quantity"
+              onChange={this.handleChange}
+            />
+          </div>
+          <div className="mb-3">
+            <label for="exampleInputPh" className="form-label">
+              OrderDate
+            </label>
+            <input
+              type="date"
+              className="form-control"
+              id="exampleInputPh"
+              value={this.state.bookorder.orderDate}
+              name="orderDate"
+              onChange={this.handleChange}
+            />
+          </div>
+          <div className="mb-3">
+            <label for="exampleInputPh" className="form-label">
+              BookID
+            </label>
+            <input
+              type="tel"
+              className="form-control"
+              id="exampleInputPh"
+              value={this.state.bookorder.bookid}
+              name="bookid"
               onChange={this.handleChange}
             />
           </div>
@@ -121,4 +123,4 @@ class UpdateAuthor extends React.Component {
   }
 }
 
-export default UpdateAuthor;
+export default UpdateOrder;

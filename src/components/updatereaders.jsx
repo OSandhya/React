@@ -1,54 +1,57 @@
 import React, { Component } from "react";
 import axios from "axios";
 
-class UpdateAuthor extends React.Component {
+class UpdateReaders extends React.Component {
   state = {
-    author: {
+    reader: {
       firstName: "",
       lastName: "",
+      password:"",
       email: "",
-      contactno: "",
+      mobileno: "",
     },
   };
 
   componentDidMount() {
-    // this.props.match.params.authorId;
+    
     axios
       .get(
-        `http://localhost:8080/api/viewAuthorbyId/${this.props.match.params.authorId}`
+        `http://localhost:8080/api/viewreaderbyid/${this.props.match.params.id}`
       )
       .then((res) => {
-        const auth = { ...this.state.author };
-        auth.firstName = res.data.firstName;
-        auth.lastName = res.data.lastName;
-        auth.email = res.data.email;
-        auth.contactno = res.data.contactno;
+        const reader = { ...this.state.reader };
+        reader.firstName = res.data.firstName;
+        reader.lastName = res.data.lastName;
+        reader.password=res.data.password;
+        reader.email = res.data.email;
+        reader.mobileno = res.data.mobileno;
         console.log(res.data);
-        console.log(auth);
-        this.setState({ author: auth });
+        console.log(reader);
+        this.setState({ reader: reader });
       })
       .catch((err) => console.log(err));
   }
   handleChange = (event) => {
-    const auth = { ...this.state.author };
-    auth[event.target.name] = event.target.value;
+    const reader = { ...this.state.reader };
+    reader[event.target.name] = event.target.value;
     console.log(event.target.name);
     console.log(event.target.value);
-    this.setState({ author: auth });
+    this.setState({ reader:reader});
   };
   handleSubmit = (event) => {
     event.preventDefault();
-    const auth = {
-      firstName: this.state.author.firstName,
-      lastName: this.state.author.lastName,
-      email: this.state.author.email,
-      contactno: this.state.author.contactno,
-      authorId: this.props.match.params.authorId,
+    const reader = {
+      firstName: this.state.reader.firstName,
+      lastName: this.state.reader.lastName,
+      password:this.state.reader.password,
+      email: this.state.reader.email,
+      mobileno: this.state.reader.mobileno,
+      id: this.props.match.params.id,
     };
     axios
-      .put("http://localhost:8080/api/updateAuthor", auth)
+      .put("http://localhost:8080/api/updateReader", reader)
       .then((res) => {
-        this.props.history.push("/author");
+        this.props.history.push("/readers");
       })
       .catch((err) => console.log(err));
   };
@@ -65,7 +68,7 @@ class UpdateAuthor extends React.Component {
               className="form-control"
               id="exampleInputName"
               aria-describedby="emailHelp"
-              value={this.state.author.firstName}
+              value={this.state.reader.firstName}
               name="firstName"
               onChange={this.handleChange}
             />
@@ -78,35 +81,48 @@ class UpdateAuthor extends React.Component {
               type="text"
               className="form-control"
               id="exampleInputName"
-              value={this.state.author.lastName}
+              value={this.state.reader.lastName}
               name="lastName"
+              onChange={this.handleChange}
+            />
+            </div>
+            <div className="mb-3">
+            <label for="exampleInputName" className="form-label">
+              Password
+            </label>
+            <input
+              type="password"
+              className="form-control"
+              id="exampleInputName"
+              value={this.state.reader.password}
+              name="password"
               onChange={this.handleChange}
             />
           </div>
           <div className="mb-3">
             <label for="exampleInputEmail1" className="form-label">
-              Email address
+              Email
             </label>
             <input
               type="email"
               className="form-control"
               id="exampleInputEmail1"
               aria-describedby="emailHelp"
-              value={this.state.author.email}
+              value={this.state.reader.email}
               name="email"
               onChange={this.handleChange}
             />
           </div>
           <div className="mb-3">
             <label for="exampleInputPh" className="form-label">
-              ContactNo
+              MobileNo
             </label>
             <input
               type="tel"
               className="form-control"
               id="exampleInputPh"
-              value={this.state.author.contactno}
-              name="contactno"
+              value={this.state.reader.mobileno}
+              name="mobileno"
               onChange={this.handleChange}
             />
           </div>
@@ -121,4 +137,4 @@ class UpdateAuthor extends React.Component {
   }
 }
 
-export default UpdateAuthor;
+export default UpdateReaders;
